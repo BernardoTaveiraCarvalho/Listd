@@ -1,38 +1,25 @@
 <script>
-  import FormUserVue from './components/FormUser.vue';
-  import UserList from './components/UserList.vue';
-  import User from './models/User';
+
+import Main from './components/Main.vue';
+ 
 
 
   export default {
     name:"App",
     components: {
-      FormUserVue,
-      UserList
-    },
+   
+    Main
+},
     data(){
       return{
-        userEdit : null,
-        userList : []
+      
       }
     },
-    methods:{
-      createList(user){
-        user.generateId()
-        
-        this.userList.push(user)
-      },
-      editUser(user){
-        console.log(user)
-        this.userEdit = new User(user.toObject())
-      }
-    }
+   
   }
   </script>
   
   <template>
-  <FormUserVue @createList="createList" :user-edit="this.userEdit"></FormUserVue>
-  <UserList :user-list="userList" @editUser="editUser"></UserList>
+    <h1>Task</h1>
+  <Main></Main>
    </template>
-  
-  
