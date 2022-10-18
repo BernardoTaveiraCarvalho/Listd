@@ -4,24 +4,22 @@ import Task from '../models/Task'
 export const useListTaskStore = defineStore('ListTaskStore',{
     state: () =>({
         taskList: [],
-       // taskListFilter :[],
         countTaskFinish: 0,
         countTaskDontFinish:0
         }),
     getters:{
-        getTaskList: (state) =>state.taskList,       
+        getTaskList: (state) =>state.taskList,   
+        getTaskListFinish: (state) =>state.taskList.filter(task => task.complete == true),
+        getTaskListDontFinish: (state) =>state.taskList.filter(task => task.complete ==false), 
         getCountTaskFinish : (state)=>state.countTaskFinish,
         getCountTaskDontFinish:(state)=>state.countTaskDontFinish,
     },
     actions:{
         filterList(value){
-            //this.taskListFilter= this.taskList
          if(value != null) {
-            this.taskListFilter= this.taskList.filter(task => task.complete == value);
-         
-         }  else{
-            this.taskListFilter=this.taskList.filter(task => task.complete != null);
+            return this.taskList.filter(task => task.complete == value);  
          }
+           return this.taskList
         },
         changeTaskCount(task){
             if(task.complete ===true){
