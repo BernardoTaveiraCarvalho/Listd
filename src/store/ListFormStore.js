@@ -1,30 +1,58 @@
 import { defineStore } from 'pinia'
 import Task from '../models/Task'
-let number=0;
+
 export const useListTaskStore = defineStore('ListTaskStore',{
     state: () =>({
-        taskList: []
+        taskList: [],
+       // taskListFilter :[],
+        countTaskFinish: 0,
+        countTaskDontFinish:0
         }),
     getters:{
-        getUserList: (state) =>state.taskList       
-  
+        getTaskList: (state) =>state.taskList,       
+        getCountTaskFinish : (state)=>state.countTaskFinish,
+        getCountTaskDontFinish:(state)=>state.countTaskDontFinish,
     },
     actions:{
-        createListFormLocalStore(){
-            for(let i=0;i<localStorage.getItem('number');i++){
-                this.taskList[i] = new Task(localStorage.getItem('taskId'+i),localStorage.getItem('taskDescription'+i),localStorage.getItem('taskComplete'+i))
+        filterList(value){
+            //this.taskListFilter= this.taskList
+         if(value != null) {
+            this.taskListFilter= this.taskList.filter(task => task.complete == value);
+         
+         }  else{
+            this.taskListFilter=this.taskList.filter(task => task.complete != null);
+         }
+        },
+        changeTaskCount(task){
+            if(task.complete ===true){
+                console.log(this.CountTaskFinish)
+                this.countTaskFinish++
+                localStorage.setItem('countTaskFinish',this.countTaskFinish)
+            }else{
+                console.log(this.CountTaskDontFinish)
+                this.countTaskDontFinish++
+                localStorage.setItem('countTaskDontFinish',this.countTaskDontFinish)
             }
+        },
+        createTaskCount(){
+            this.countTaskFinish=localStorage.getItem('countTaskFinish')
+            this.countTaskDontFinish=localStorage.getItem('countTaskDontFinish')
+        },
+        createListFormLocalStore(){
+           
+            const storeObject =JSON.parse(localStorage.getItem('taskArray'))
+            if(storeObject !=null){
+            for(let i=0;i<storeObject.length;i++){
+                this.taskList[i] = new Task(storeObject[i].id,storeObject[i].description,storeObject[i].complete)      
+            }
+            }
+            this.createTaskCount()
         },
         createList(task){
             task.generateId()
-            localStorage.setItem('number',number)
-            localStorage.setItem('taskId'+number,task.id)
-            localStorage.setItem('taskDescription'+number,task.description)
-            localStorage.setItem('taskComplete'+number,task.complete)
-            number++
             this.taskList.push(task)
-            localStorage.setItem('taskArray', this.taskList)
-         
+            localStorage.setItem('taskArray', JSON.stringify(this.taskList))
+            this.changeTaskCount(task)
           },
           findTask(id){
             let taskFinded
@@ -37,34 +65,23 @@ export const useListTaskStore = defineStore('ListTaskStore',{
                 return taskFinded
           },
           editList(task){  
-            console.log(task.id)
            let  element=  this.findTask(task.id)
             element.copyObject(task)
           },
           deleteTask(task){
-            console.log(task.complete)
-           console.log("a")
-           console.log(task.complete==false)
-           console.log("a")
-           console.log(task.complete=false)
-
-            if(task.complete==false){
+        if(task.complete===false){
             for(let i =0;i<this.taskList.length;i++){
                 console.log(this.taskList)
                 if(this.taskList[i].id==task.id){
-                    console.log(i)
-                    localStorage.removeItem('taskId'+i)
-                    localStorage.removeItem('taskDescription'+i)
-                    localStorage.removeItem('taskComplete'+i)
-                   
                    this.taskList.splice(i, 1)
+                   localStorage.setItem('taskArray', JSON.stringify(this.taskList))
                 }
-                console.log("A");
-                console.log(this.taskList)
             }
+            this.countTaskDontFinish--
+            localStorage.setItem('countTaskDontFinish',this.countTaskDontFinish)
         }else{
             alert("Task cant be deleted")
         }
-          }
+     }
     }
 })

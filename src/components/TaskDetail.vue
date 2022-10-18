@@ -10,11 +10,14 @@
     },
     data(){
       return{
-      
       }
     },
+   created() {
+        console.log(2)
+            this.createListFormLocalStore()
+        },
     methods: {
-    ...mapActions( useListTaskStore,['findTask'])
+    ...mapActions( useListTaskStore,['findTask','createListFormLocalStore'])
     },
   
   }

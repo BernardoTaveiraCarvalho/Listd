@@ -16,7 +16,6 @@ import { useFormTaskStore } from '../store/FormTaskStore'
 
 import {mapActions}   from  'pinia'
 export default {
-   
     props: {
         task: {
             type: Task,
