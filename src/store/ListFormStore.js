@@ -65,6 +65,7 @@ export const useListTaskStore = defineStore('ListTaskStore',{
           editList(task){  
            let  element=  this.findTask(task.id)
             element.copyObject(task)
+            localStorage.setItem('taskArray', JSON.stringify(this.taskList))
           },
           deleteTask(task){
         if(task.complete===false){

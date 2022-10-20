@@ -16,7 +16,5 @@ export default class Task{
         this.description= task.description;
         this.complete= task.complete;
     }
-    
-   
-    
+
 }
